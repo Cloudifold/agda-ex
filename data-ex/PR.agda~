@@ -1,0 +1,32 @@
+import Relation.Binary.PropositionalEquality as Eq
+open Eq using (_≡_; _≢_; refl; trans; sym; cong)
+open import Data.Vec.Base using (Vec; []; _∷_; lookup; map)
+open import Data.Fin using (Fin; #_)
+open import Data.Product using (Σ; _×_; _,_; proj₁; proj₂)
+
+
+open import Data.Empty using (⊥; ⊥-elim)
+open import Data.Nat using (ℕ; zero; suc; _<_; _≤_; _≤?_; z≤n; s≤s; _+_)
+open import Relation.Nullary using (¬_)
+-- open import Relation.Nullary.Decidable using (True; toWitness)\
+
+
+data PR : ℕ -> Set where
+  cons : (k : ℕ) -> ℕ -> PR k
+  succ : PR 1
+  proj : (k : ℕ) -> Fin k -> PR k
+  comp : ∀ {k : ℕ} {m : ℕ} -> PR m -> Vec (PR k) m -> PR k
+  prec : (k : ℕ) -> (g : PR k) -> (h : PR (suc (suc k))) -> PR (suc k)
+
+cp : ∀ {n m : ℕ} -> (fs : Vec (PR n) m) -> Vec ℕ n -> Vec ℕ m
+
+pr : ∀ {k : ℕ} -> PR k -> Vec ℕ k -> ℕ
+pr (cons _ n) xs = n
+pr succ (n ∷ []) = suc n
+pr (proj k i) xs = lookup xs i
+pr (comp h gs) xs = pr h (cp gs xs)
+pr (prec k g h) (zero ∷ xs) = pr g xs
+pr (prec k g h) (suc n ∷ xs) = {!pr g (n )!}
+
+cp [] xs = []
+cp (f ∷ fs) xs = pr f xs ∷ (cp fs xs)

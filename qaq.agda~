@@ -1,0 +1,18 @@
+{-# OPTIONS  --cubical --with-K  #-}
+
+data Bool : Set where
+  t : Bool
+  f : Bool
+
+data Nat : Set where
+  z : Nat
+  s : Nat → Nat
+
+variable A : Set
+
+data Term : Set → Set where
+  nat : Nat → Term Nat
+  suc : Term Nat → Term Nat
+  bool : Bool → Term Bool
+  inv : Term Bool → Term Bool
+  case : Term Bool → (x y : Term A) → Term A
