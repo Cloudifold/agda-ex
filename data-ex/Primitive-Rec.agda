@@ -69,6 +69,7 @@ primRecFunc (const _ n) xs = n
 primRecFunc succ (x ∷ []) = suc x
 primRecFunc (proj k i i<k) xs = select xs i i<k
 primRecFunc (comp {k} {m} h gs) = multiComp (primRecFunc h) (vecMap primRecFunc gs)
+-- stucks termination checker
 
     
 primRecFunc (prec k g h) = {!!}
